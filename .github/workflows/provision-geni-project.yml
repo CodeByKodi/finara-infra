@@ -35,18 +35,18 @@ jobs:
 
     - name: 📁 Terraform Init
       run: terraform init
-      working-directory: ./finara-infra
+      working-directory: .
 
     - name: 📋 Terraform Plan
       run: terraform plan -input=false
-      working-directory: ./finara-infra
+      working-directory: .
 
     - name: ⚙️ Terraform Apply
       if: github.event.inputs.action == 'apply'
       run: terraform apply -auto-approve
-      working-directory: ./finara-infra
+      working-directory: .
 
     - name: 💣 Terraform Destroy
       if: github.event.inputs.action == 'destroy'
       run: terraform destroy -auto-approve
-      working-directory: ./finara-infra
+      working-directory: .
