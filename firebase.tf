@@ -12,3 +12,20 @@ output "firebase_admin_key_json" {
   value     = google_service_account_key.backend_key.private_key
   sensitive = true
 }
+
+resource "null_resource" "enable_firebase" {
+  provisioner "local-exec" {
+    command = <<EOT
+      curl -s -X POST \
+        -H "Authorization: Bearer $(gcloud auth print-access-token)" \
+        -H "Content-Type: application/json" \
+        "https://firebase.googleapis.com/v1beta1/projects/${var.project_id}:addFirebase"
+    EOT
+  }
+
+  triggers = {
+    always_run = timestamp()
+  }
+
+  depends_on = [google_service_account_key.backend_key]
+}
