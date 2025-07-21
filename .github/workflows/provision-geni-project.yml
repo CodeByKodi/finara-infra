@@ -1,0 +1,52 @@
+name: GCP Infra Provisioning (geni-project)
+
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "Terraform Action (apply or destroy)"
+        required: true
+        default: "apply"
+
+jobs:
+  provision:
+    runs-on: ubuntu-latest
+
+    env:
+      TF_VAR_project_id: geni-project
+      TF_VAR_region: asia-south1
+      GOOGLE_PROJECT: geni-project
+
+    steps:
+    - name: ⏬ Checkout Repository
+      uses: actions/checkout@v3
+
+    - name: 🔐 Authenticate to Google Cloud
+      uses: google-github-actions/setup-gcloud@v2
+      with:
+        project_id: geni-project
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        export_default_credentials: true
+
+    - name: 📦 Install Terraform
+      uses: hashicorp/setup-terraform@v2
+      with:
+        terraform_version: 1.6.6
+
+    - name: 📁 Terraform Init
+      run: terraform init
+      working-directory: ./finara-infra
+
+    - name: 📋 Terraform Plan
+      run: terraform plan -input=false
+      working-directory: ./finara-infra
+
+    - name: ⚙️ Terraform Apply
+      if: github.event.inputs.action == 'apply'
+      run: terraform apply -auto-approve
+      working-directory: ./finara-infra
+
+    - name: 💣 Terraform Destroy
+      if: github.event.inputs.action == 'destroy'
+      run: terraform destroy -auto-approve
+      working-directory: ./finara-infra
