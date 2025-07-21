@@ -61,12 +61,6 @@ jobs:
       run: |
         gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
 
-    - name: ✅ Validate GCP Resources
-      if: github.event.inputs.action == 'apply'
-      run: |
-        echo "Listing GCP resources in project: $GOOGLE_PROJECT"
-        gcloud asset search-all-resources --project="$GOOGLE_PROJECT" --format="table(assetType, name)" || echo "No resources found or insufficient permissions"
-
     - name: 💣 Terraform Destroy
       if: github.event.inputs.action == 'destroy'
       run: terraform destroy -auto-approve
@@ -76,9 +70,3 @@ jobs:
       if: github.event.inputs.action == 'destroy'
       run: |
         gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
-
-    - name: ✅ Validate GCP Resources
-      if: github.event.inputs.action == 'destroy'
-      run: |
-        echo "Listing GCP resources in project: $GOOGLE_PROJECT"
-        gcloud asset search-all-resources --project="$GOOGLE_PROJECT" --format="table(assetType, name)" || echo "No resources found or insufficient permissions"
