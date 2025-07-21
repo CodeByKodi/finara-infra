@@ -21,8 +21,8 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v3
 
-    - name: Show Terraform Action
-      run: echo " Running Terraform action: ${{ github.event.inputs.action }} on project: ${{ env.GOOGLE_PROJECT }}"
+    # - name: Show Terraform Action
+    #   run: echo " Running Terraform action: ${{ github.event.inputs.action }} on project: ${{ env.GOOGLE_PROJECT }}"
 
     - name:  Authenticate to Google Cloud
       uses: google-github-actions/setup-gcloud@v2
