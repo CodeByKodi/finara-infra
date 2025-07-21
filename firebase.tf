@@ -16,11 +16,12 @@ output "firebase_admin_key_json" {
 resource "null_resource" "enable_firebase" {
   provisioner "local-exec" {
     command = <<EOT
-      curl -s -X POST \
-        -H "Authorization: Bearer $(gcloud auth print-access-token)" \
-        -H "Content-Type: application/json" \
-        "https://firebase.googleapis.com/v1beta1/projects/${var.project_id}:addFirebase"
-    EOT
+  ACCESS_TOKEN=$(gcloud auth application-default print-access-token)
+  curl -s -X POST \
+    -H "Authorization: Bearer $ACCESS_TOKEN" \
+    -H "Content-Type: application/json" \
+    "https://firebase.googleapis.com/v1beta1/projects/${var.project_id}:addFirebase"
+EOT
   }
 
   triggers = {
