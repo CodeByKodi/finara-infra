@@ -59,7 +59,7 @@ jobs:
     #   run: terraform show
     #   working-directory: .
 
-    - name: 🔑 Activate Service Account
+    - name: 🔑 Activate Service Account (Apply)
       if: github.event.inputs.action == 'apply'
       run: |
         gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
@@ -69,7 +69,7 @@ jobs:
       run: terraform destroy -auto-approve
       working-directory: .
 
-    - name: 🔑 Activate Service Account
+    - name: 🔑 Activate Service Account (Destroy)
       if: github.event.inputs.action == 'destroy'
       run: |
         gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
