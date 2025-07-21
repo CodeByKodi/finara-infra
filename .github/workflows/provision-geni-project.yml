@@ -51,6 +51,11 @@ jobs:
       run: terraform apply -auto-approve
       working-directory: .
 
+    - name: 📄 Show Terraform State
+      if: github.event.inputs.action == 'apply'
+      run: terraform show
+      working-directory: .
+
     - name: 🔑 Activate Service Account
       if: github.event.inputs.action == 'apply'
       run: |
