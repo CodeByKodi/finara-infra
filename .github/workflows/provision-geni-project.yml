@@ -21,6 +21,9 @@ jobs:
     - name: ⏬ Checkout Repository
       uses: actions/checkout@v3
 
+    - name: 🧭 Show Terraform Action
+      run: echo "Running Terraform action: ${{ github.event.inputs.action }}"
+
     - name: 🔐 Authenticate to Google Cloud
       uses: google-github-actions/setup-gcloud@v2
       with:
@@ -51,10 +54,10 @@ jobs:
       run: terraform apply -auto-approve
       working-directory: .
 
-    - name: 📄 Show Terraform State
-      if: github.event.inputs.action == 'apply'
-      run: terraform show
-      working-directory: .
+    # - name: 📄 Show Terraform State
+    #   if: github.event.inputs.action == 'apply'
+    #   run: terraform show
+    #   working-directory: .
 
     - name: 🔑 Activate Service Account
       if: github.event.inputs.action == 'apply'
