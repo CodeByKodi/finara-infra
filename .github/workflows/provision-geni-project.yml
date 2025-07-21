@@ -51,6 +51,11 @@ jobs:
       run: terraform apply -auto-approve
       working-directory: .
 
+    - name: 🔑 Activate Service Account
+      if: github.event.inputs.action == 'apply'
+      run: |
+        gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
+
     - name: ✅ Validate GCP Resources
       if: github.event.inputs.action == 'apply'
       run: |
@@ -61,6 +66,11 @@ jobs:
       if: github.event.inputs.action == 'destroy'
       run: terraform destroy -auto-approve
       working-directory: .
+
+    - name: 🔑 Activate Service Account
+      if: github.event.inputs.action == 'destroy'
+      run: |
+        gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
 
     - name: ✅ Validate GCP Resources
       if: github.event.inputs.action == 'destroy'
