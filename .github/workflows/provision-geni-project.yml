@@ -21,9 +21,6 @@ jobs:
     - name: ⏬ Checkout Repository
       uses: actions/checkout@v3
 
-    - name: 🧭 Show Terraform Action
-      run: echo "Running Terraform action: ${{ github.event.inputs.action }}"
-
     - name: 🔐 Authenticate to Google Cloud
       uses: google-github-actions/setup-gcloud@v2
       with:
@@ -33,9 +30,8 @@ jobs:
 
     - name: 🔐 Set GOOGLE_APPLICATION_CREDENTIALS from base64
       run: |
-        echo "${{ secrets.GCP_SA_KEY_BASE64 }}" | base64 --decode > /tmp/key.json
+        echo "${{ secrets.GCP_SA_KEY_BASE64 }}" | base64 -d > /tmp/key.json
         echo "GOOGLE_APPLICATION_CREDENTIALS=/tmp/key.json" >> $GITHUB_ENV
-
     - name: 📦 Install Terraform
       uses: hashicorp/setup-terraform@v2
       with:
@@ -54,22 +50,21 @@ jobs:
       run: terraform apply -auto-approve
       working-directory: .
 
-    # - name: 📄 Show Terraform State
-    #   if: github.event.inputs.action == 'apply'
-    #   run: terraform show
-    #   working-directory: .
+    - name: 📄 Show Terraform State
+      if: github.event.inputs.action == 'apply'
+      run: terraform show
+      working-directory: .
 
-    - name: 🔑 Activate Service Account (Apply)
+    - name: 🔑 Activate Service Account
       if: github.event.inputs.action == 'apply'
       run: |
         gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
-
     - name: 💣 Terraform Destroy
       if: github.event.inputs.action == 'destroy'
       run: terraform destroy -auto-approve
       working-directory: .
 
-    - name: 🔑 Activate Service Account (Destroy)
+    - name: 🔑 Activate Service Account
       if: github.event.inputs.action == 'destroy'
       run: |
         gcloud auth activate-service-account --key-file=$GOOGLE_APPLICATION_CREDENTIALS
