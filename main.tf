@@ -5,6 +5,9 @@ provider "google" {
 
 resource "google_project_service" "required_services" {
   for_each = toset([
+    "compute.googleapis.com",
+    "dataflow.googleapis.com",
+    "notebooks.googleapis.com",
     "aiplatform.googleapis.com",              # Vertex AI
     "generativelanguage.googleapis.com",      # Gemini API
     "firebase.googleapis.com",                # Firebase
