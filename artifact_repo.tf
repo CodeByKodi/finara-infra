@@ -11,6 +11,7 @@ resource "google_artifact_registry_repository" "finara_repo" {
   }
 
   cleanup_policies {
+    id     = "remove-old-images"
     action = "DELETE"
     condition {
       older_than = "30d"
